@@ -1,14 +1,42 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Page title</title>
-    <link rel="stylesheet" href="./sass/index.scss" />
-    <script type="module" src="./index.js"></script>
+    <title>Homework 11</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link rel="stylesheet" href="./css/common.css" />
   </head>
   <body>
-    <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+
+
+    <section class="search-section">
+      <div class="container">
+        <form class="search-form" id="search-form">
+          <input
+            class="search-input"
+            type="text"
+            name="searchQuery"
+            autocomplete="off"
+            placeholder="Search images..."
+          />
+          <button class="search-btn" type="submit">
+            <span class="material-symbols-outlined"> search </span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+
+
+    <section class="gallery-section">
+      <div class="container"><ul class="gallery-list"></ul></div>
+    </section>
+
+    <script src="index.js" type="module"></script>
   </body>
 </html>
