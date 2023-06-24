@@ -1,102 +1,26 @@
-import './css/common.css';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import PixabayServise from './fetch_pixabay';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import findPicture from "./fetch_pixabay";
 
-const pixabayServise = new PixabayServise();
+const refs = {
+  searchForm: document.querySelector('.search-form'),
 
-const searchForm = document.querySelector('.search-form');
-const searchInput = document.querySelector('.search-input');
-const galleryList = document.querySelector('.gallery-list');
+}
+refs.searchForm.addEventListener('submit', onSearch)
 
-searchForm.addEventListener('submit', getSearchResult);
-window.addEventListener('scroll', getMoreResults);
+function onSearch(event){
+  event.preventDefault()
 
-function getSearchResult(e) {
-  e.preventDefault();
+  const searchQuery = event.currentTarget.elements.query.value;
 
-  pixabayServise.query = e.currentTarget.elements.searchQuery.value;
-  pixabayServise.fetchPictures().then(({ data }) => {
-    if (data.total === 0) {
-      clearPage();
-
-      Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-      return;
-    }
-
-    Notify.success(`Hooray! We found ${data.totalHits} images.`);
-
-    clearPage();
-    createGallery(data.hits);
-    nextPage();
-  });
+  fetch(`https://pixabay.com/api/?key=33922902-bfae212e6daaaa40ab37292b2&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true`)
+.then(res => res.json())
+.then(console.log)
 }
 
-function createGallery(query) {
-  const countryItem = query
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) =>
-        `<li class="list-item">
-      <div class="photo-card">
-      <div class="photo-container">
-      <a class="photo" href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-  </a>
-  </div>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b> ${likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b> ${views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b> ${comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b> ${downloads}
-    </p>
-  </div>
-</div>
-</li>`
-    )
-    .join('');
-  galleryList.insertAdjacentHTML('beforeend', countryItem);
 
-  new SimpleLightbox('.photo', {
-    captions: false,
-  });
-}
 
-function clearPage() {
-  // window.scrollTo(0, 0);
+// const options = {
+//   headers:{
+//     key: "33922902-bfae212e6daaaa40ab37292b2"
+//   },
+// }
 
-  galleryList.innerHTML = '';
-}
-
-function nextPage() {
-  pixabayServise.page += 1;
-}
-
-function getMoreResults() {
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight
-  ) {
-    pixabayServise.fetchPictures().then(({ data }) => {
-      createGallery(data.hits);
-      nextPage();
-    });
-  }
-}
