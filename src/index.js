@@ -7,7 +7,7 @@ const refs = {
 };
 
 function fetchPictures() {
-  const searchQuery = '';
+  const searchQuery = "";
 
   return fetch(
     `https://pixabay.com/api/?key=33922902-bfae212e6daaaa40ab37292b2&q=${'cat'}&image_type=photo&orientation=horizontal&safesearch=true`
