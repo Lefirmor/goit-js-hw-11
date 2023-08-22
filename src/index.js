@@ -21,11 +21,13 @@ function OnLoadMore(){
 })}
 
 function fetchPictures() {
-  const searchQuery = "";
+  const searchQuery = '';
 
   return fetch(
     `https://pixabay.com/api/?key=33922902-bfae212e6daaaa40ab37292b2&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}`
-  ).then(res >= res.json).then(console.log)
+  ).then(res => {
+    return res.json()
+  })
    
 
 }
@@ -44,13 +46,13 @@ function findpics(e){
   
 }
 
-// fetchPictures()
-//   .then(data => {
-//     refs.gallery.insertAdjacentHTML("beforeend", createMarkup(data.hits))
+fetchPictures()
+  .then(data => {
+    refs.gallery.insertAdjacentHTML("beforeend", createMarkup(data.hits))
 
-//     console.log(data)
-//   })
-//   .catch(err => console.error(err));
+    console.log(data)
+  })
+  .catch(err => console.error(err));
 
 function createMarkup(array) {
   return array
