@@ -9,7 +9,7 @@ export default class PixabayApiService {
       `https://pixabay.com/api/?key=33922902-bfae212e6daaaa40ab37292b2&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}`
     ).then(res => res.json())
     .then(data => {
-      this.incrementPage()
+      // this.incrementPage()
       return data;
     })
   }

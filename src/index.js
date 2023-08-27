@@ -24,7 +24,7 @@ function findpics(e) {
   e.preventDefault();
 
   
-  pixabayApiService.query = refs.searchInput.value;
+  pixabayApiService.query = e.target.elements.searchQuery.value.trim();
   pixabayApiService.resetPage()
   pixabayApiService.fetchPictures()
     .then(data => {
