@@ -30,11 +30,11 @@ function findpics(e) {
     .then(data => {
       clearArticlesContainer();
       document.documentElement.getBoundingClientRect().top = 0;
-      if (data.hits.length === 0) {
+      if (data.length === 0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
         refs.loadMore.classList.add('load-more__is-hidden');
      
-      } else if (data.total !== 0) {
+      } else if (data !== 0) {
         Notiflix.Notify.success(`Hooray! We found ${data.total} images`);
       }
 

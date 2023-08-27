@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default class PixabayApiService {
   constructor() {
     this.searchQuery = ''
@@ -5,13 +7,14 @@ export default class PixabayApiService {
   }
 
   async fetchPictures() {
-   return fetch(
+   const resp = await axios.get(
       `https://pixabay.com/api/?key=33922902-bfae212e6daaaa40ab37292b2&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}`
-    ).then(res => res.json())
-    .then(data => {
+    )
+    .then(({data}) => {
       // this.incrementPage()
-      return data;
+      return data
     })
+    return resp;
   }
 
   incrementPage(){
