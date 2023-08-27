@@ -43,7 +43,7 @@ function findpics(e) {
 
       console.log(data);
     })
-    .catch(err => console.log(err.statusText));
+    .catch(err => console.log(err.message));
 }
 
 function createMarkup(array) {
