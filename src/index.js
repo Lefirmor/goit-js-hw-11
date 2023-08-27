@@ -1,7 +1,8 @@
 import Notiflix from 'notiflix';
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css"
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 import PixabayApiService from './pixabay-service';
+// import './observer';  
 
 const refs = {
   searchInput: document.querySelector('.search-input'),
@@ -11,35 +12,43 @@ const refs = {
   gallery: document.querySelector('.gallery'),
   // loadMoreHidden: document.querySelector('load-more__is-hidden'),
   loadMore: document.querySelector('.load-more'),
+  observ: document.querySelector('.observerDiv'),
 };
 const pixabayApiService = new PixabayApiService();
 // refs.loadMore.addEventListener("click", OnLoadMore)
 // const inputValue = refs.searchInput.value;
 let page = 1;
 
-
 refs.searchForm.addEventListener('submit', findpics);
 
 function findpics(e) {
   e.preventDefault();
 
-  
   pixabayApiService.query = e.target.elements.searchQuery.value.trim();
-  pixabayApiService.resetPage()
-  pixabayApiService.fetchPictures()
+  pixabayApiService.resetPage();
+  clearArticlesContainer();
+  pixabayApiService
+    .fetchPictures()
     .then(data => {
-      clearArticlesContainer();
+      
       // document.documentElement.getBoundingClientRect().top = 0;
-      if (data.length === 0) {
-        Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      if (data.total === 0) {
+        Notiflix.Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
         refs.loadMore.classList.add('load-more__is-hidden');
-     
-      } else if (data !== 0) {
+      }
+      if(pixabayApiService.query === ''){
+        
+      }
+      if (data.total !== 0 && pixabayApiService.query !== '') {
         Notiflix.Notify.success(`Hooray! We found ${data.total} images`);
       }
-
-      refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
-      lightbox.refresh()
+      if(pixabayApiService.query !== ''){
+        refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+        lightbox.refresh();
+      }
+      
 
       console.log(data);
     })
@@ -76,30 +85,32 @@ function createMarkup(array) {
     </div>`
     )
     .join('');
-    
 }
 
 function clearArticlesContainer() {
   refs.gallery.innerHTML = '';
 }
 console.log(page);
-window.addEventListener('scroll', () => {
-  const documentRect = document.documentElement.getBoundingClientRect();
-  if (documentRect.bottom < document.documentElement.clientHeight + 150) {
-    pixabayApiService.incrementPage()
-    pixabayApiService.query = refs.searchInput.value;
-    pixabayApiService.fetchPictures().then(data => {
-      refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
-      lightbox.refresh()
-      // console.log(data);
-    });
-  }
+
+const lightbox = new SimpleLightbox('.gallery a', {});
+
+const observer = new IntersectionObserver(function (entries) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && pixabayApiService.query !== '') {
+      pixabayApiService.fetchPictures().then(data => {
+       
+       
+        refs.gallery.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+        pixabayApiService.incrementPage();
+        lightbox.refresh();
+        
+
+        console.log(data);
+      });
+    }
+  }, options);
 });
- 
-const lightbox = new SimpleLightbox('.gallery a', {
- 
-  
-})
-
-
-
+const options = {
+  rootMargin: '200px'
+};
+observer.observe(refs.observ);
