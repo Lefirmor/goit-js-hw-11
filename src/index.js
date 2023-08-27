@@ -29,7 +29,7 @@ function findpics(e) {
   pixabayApiService.fetchPictures()
     .then(data => {
       clearArticlesContainer();
-      document.documentElement.getBoundingClientRect().top = 0;
+      // document.documentElement.getBoundingClientRect().top = 0;
       if (data.length === 0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
         refs.loadMore.classList.add('load-more__is-hidden');
